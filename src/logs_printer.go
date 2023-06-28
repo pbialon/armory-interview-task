@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
 )
@@ -11,11 +12,16 @@ const LogFileExtension = "log"
 func main() {
 	dir := parseInputArgs(os.Args[1:])
 	files, err := getLogFiles(dir)
+	log.Infof("Found log %v files", len(files))
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatal("Couldn't get log files", err)
 	}
+
 	fmt.Println(files)
+}
+
+func sortLogLines(files []string) {
+
 }
 
 func getLogFiles(dir string) ([]string, error) {
@@ -24,8 +30,7 @@ func getLogFiles(dir string) ([]string, error) {
 
 func parseInputArgs(args []string) string {
 	if len(args) != 1 {
-		fmt.Println("Invalid number of arguments")
-		os.Exit(1)
+		log.Fatal("Invalid number of arguments")
 	}
 	return filepath.Clean(args[0])
 }
