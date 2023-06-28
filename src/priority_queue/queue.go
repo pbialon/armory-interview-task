@@ -5,7 +5,7 @@ type Item interface {
 }
 
 type PriorityQueue struct {
-	items []*Item
+	items []Item
 }
 
 func (pq *PriorityQueue) Len() int {
@@ -13,8 +13,8 @@ func (pq *PriorityQueue) Len() int {
 }
 
 func (pq *PriorityQueue) Less(i, j int) bool {
-	first := *pq.items[i]
-	second := *pq.items[j]
+	first := pq.items[i]
+	second := pq.items[j]
 	return first.lt(second)
 }
 
@@ -23,17 +23,15 @@ func (pq *PriorityQueue) Swap(i, j int) {
 }
 
 func (pq *PriorityQueue) Push(x interface{}) {
-	pq.items = append(pq.items, x.(*Item))
+	pq.items = append(pq.items, x.(Item))
 }
 
 func (pq *PriorityQueue) Pop() interface{} {
+	if len(pq.items) == 0 {
+		return nil
+	}
 	old := pq.items
-	n := len(old)
-	item := old[n-1]
-	pq.items = old[0 : n-1]
+	item := old[0]
+	pq.items = old[1:]
 	return item
-}
-
-func (pq *PriorityQueue) Peek() interface{} {
-	return pq.items[0]
 }
