@@ -9,11 +9,11 @@ import (
 
 const LogFileExtension = "log"
 
-type localDiskFilePoolHandler struct {
+type LocalDiskFilePoolHandler struct {
 	files map[string]*os.File
 }
 
-func newLocalDiskFilePoolHandler(dir string) *localDiskFilePoolHandler {
+func NewLocalDiskFilePoolHandler(dir string) *LocalDiskFilePoolHandler {
 	files := make(map[string]*os.File)
 	fileNames, err := filepath.Glob(filepath.Join(dir, fmt.Sprintf("*.%s", LogFileExtension)))
 	if err != nil {
@@ -28,17 +28,17 @@ func newLocalDiskFilePoolHandler(dir string) *localDiskFilePoolHandler {
 		}
 		files[fileName] = fileHandle
 	}
-	return &localDiskFilePoolHandler{files: files}
+	return &LocalDiskFilePoolHandler{files: files}
 }
 
-func (fp *localDiskFilePoolHandler) NextLine(fileName string) (string, error) {
+func (fp *LocalDiskFilePoolHandler) NextLine(fileName string) (string, error) {
 	var line string
 	file := fp.files[fileName]
 	_, err := fmt.Fscanln(file, &line)
 	return line, err
 }
 
-func (fp *localDiskFilePoolHandler) closeFiles() {
+func (fp *LocalDiskFilePoolHandler) CloseFiles() {
 	for _, file := range fp.files {
 		err := file.Close()
 		if err != nil {

@@ -13,8 +13,8 @@ type filePool interface {
 
 func main() {
 	dir := parseInputArgs(os.Args[1:])
-	filesPool := newLocalDiskFilePoolHandler(dir)
-	defer filesPool.closeFiles()
+	filesPool := NewLocalDiskFilePoolHandler(dir)
+	defer filesPool.CloseFiles()
 }
 
 func parseInputArgs(args []string) string {
