@@ -1,26 +1,32 @@
 package priority_queue
 
-type PriorityQueue[Item ordered] struct {
+type Item interface {
+	lt(other interface{}) bool
+}
+
+type PriorityQueue struct {
 	items []*Item
 }
 
-func (pq *PriorityQueue[Item]) Len() int {
+func (pq *PriorityQueue) Len() int {
 	return len(pq.items)
 }
 
-func (pq *PriorityQueue[Item]) Less(i, j int) bool {
-	return (*pq.items[i]).lt(*pq.items[j])
+func (pq *PriorityQueue) Less(i, j int) bool {
+	first := *pq.items[i]
+	second := *pq.items[j]
+	return first.lt(second)
 }
 
-func (pq *PriorityQueue[Item]) Swap(i, j int) {
+func (pq *PriorityQueue) Swap(i, j int) {
 	pq.items[i], pq.items[j] = pq.items[j], pq.items[i]
 }
 
-func (pq *PriorityQueue[Item]) Push(x interface{}) {
+func (pq *PriorityQueue) Push(x interface{}) {
 	pq.items = append(pq.items, x.(*Item))
 }
 
-func (pq *PriorityQueue[Item]) Pop() interface{} {
+func (pq *PriorityQueue) Pop() interface{} {
 	old := pq.items
 	n := len(old)
 	item := old[n-1]
@@ -28,6 +34,6 @@ func (pq *PriorityQueue[Item]) Pop() interface{} {
 	return item
 }
 
-func (pq *PriorityQueue[Item]) Peek() interface{} {
+func (pq *PriorityQueue) Peek() interface{} {
 	return pq.items[0]
 }
