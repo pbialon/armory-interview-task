@@ -17,11 +17,11 @@ func main() {
 		log.Fatal("Couldn't get log files", err)
 	}
 
-	fmt.Println(files)
+	sortLogLines(files)
 }
 
 func sortLogLines(files []string) {
-
+	fmt.Println(files)
 }
 
 func getLogFiles(dir string) ([]string, error) {
