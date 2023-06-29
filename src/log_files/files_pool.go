@@ -47,10 +47,9 @@ func (fp *LocalDiskFilePoolHandler) NextLine(fileName string) (string, error) {
 	if !success {
 		err := scanner.Err()
 		if err != nil {
-			// todo: is it really fatal?
-			log.Fatal("Couldn't read line", err)
+			log.Warning("Couldn't read line", err)
 		}
-		return "", nil
+		return "", err
 	}
 	line = scanner.Text()
 	return line, nil

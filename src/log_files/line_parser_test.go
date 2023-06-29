@@ -1,6 +1,8 @@
 package log_files
 
-import "testing"
+import (
+	"testing"
+)
 
 func Test_logLineImpl_Timestamp(t *testing.T) {
 	type fields struct {

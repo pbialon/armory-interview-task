@@ -5,13 +5,17 @@ import (
 	"github.com/delabania/armory-interview-task/src/log_files"
 	"github.com/delabania/armory-interview-task/src/priority_queue"
 	log "github.com/sirupsen/logrus"
-	"os"
-	"path/filepath"
 )
+
+type LogLine interface {
+	Timestamp() (int64, error)
+	Raw() string
+	IsValid() bool
+}
 
 type PriorityQueueItem struct {
 	fileName string
-	line     log_files.LogLine
+	line     LogLine
 }
 
 func (pq PriorityQueueItem) Lt(other interface{}) bool {
@@ -44,35 +48,23 @@ func initPriorityQueue(pq *priority_queue.PriorityQueue, filesPool *log_files.Lo
 	heap.Init(pq)
 }
 
-func main() {
-	dir := parseInputArgs(os.Args[1:])
-
-	filesPool := log_files.NewLocalDiskFilePoolHandler(dir)
-	defer filesPool.CloseFiles()
-
-	pq := priority_queue.PriorityQueue{}
-	initPriorityQueue(&pq, filesPool)
-
-	for pq.Len() > 0 {
-		minLineItem := pq.Pop().(PriorityQueueItem)
-
-		println(minLineItem.line.Raw())
-
-		line, _ := filesPool.NextLine(minLineItem.fileName)
+func nextLineUntilValidOrEndOfFile(fileName string, filesPool *log_files.LocalDiskFilePoolHandler) (LogLine, error) {
+	for {
+		line, err := filesPool.NextLine(fileName)
 		if line == "" {
+			if err == nil {
+				// EOF
+				return nil, nil
+			} else {
+				// couldn't read line - try to read next one
+				continue
+			}
+		}
+		logLine := log_files.NewLogLineImpl(line)
+		if !logLine.IsValid() {
+			// try to read next line
 			continue
 		}
-
-		logLine := log_files.NewLogLineImpl(line)
-
-		pq.Push(PriorityQueueItem{fileName: minLineItem.fileName, line: logLine})
-		heap.Fix(&pq, pq.Len()-1)
+		return logLine, nil
 	}
-}
-
-func parseInputArgs(args []string) string {
-	if len(args) != 1 {
-		log.Fatal("Invalid number of arguments")
-	}
-	return filepath.Clean(args[0])
 }
