@@ -32,6 +32,14 @@ make compile
 ```
 Replace `<path_to_logs>` with the path to the directory containing the log files. The tool assumes that all log files in the specified directory have the .log extension.
 
+### Repository Structure
+The repository structure consists of the following components:
+
+- `src`: Contains the source code for the solution. It contains of two packages:
+  - `log_files`: Contains the code for reading and sorting the log files.
+  - `priority_queue`: Contains the code for the priority queue used for on-the-fly files sorting.
+- `resources`: Contains the log files used for testing the solution.
+
 ### Makefile Commands
 
 The repository includes a `Makefile` that provides convenient commands for building and testing the solution.
