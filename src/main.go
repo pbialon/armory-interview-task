@@ -1,6 +1,7 @@
 package main
 
 import (
+	"container/heap"
 	"github.com/delabania/armory-interview-task/src/log_files"
 	"github.com/delabania/armory-interview-task/src/priority_queue"
 	log "github.com/sirupsen/logrus"
@@ -18,7 +19,7 @@ func main() {
 	initPriorityQueue(&pq, filesPool)
 
 	for pq.Len() > 0 {
-		minLineItem := pq.Pop().(PriorityQueueItem)
+		minLineItem := heap.Pop(&pq).(PriorityQueueItem)
 		fileName := minLineItem.fileName
 
 		println(minLineItem.line.Raw())

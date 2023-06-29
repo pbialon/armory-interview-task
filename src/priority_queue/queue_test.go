@@ -114,7 +114,7 @@ func TestPriorityQueue_Pop(t *testing.T) {
 				value:    "test",
 			},
 		}, {
-			name: "priority queue with two elements should return the first element",
+			name: "queue with two elements should return the last element",
 			pq: PriorityQueue{
 				items: []Item{
 					&testStruct{
@@ -127,8 +127,8 @@ func TestPriorityQueue_Pop(t *testing.T) {
 				},
 			},
 			want: &testStruct{
-				priority: 1,
-				value:    "test1",
+				priority: 2,
+				value:    "test2",
 			},
 		},
 	}

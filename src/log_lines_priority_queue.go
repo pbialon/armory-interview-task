@@ -41,7 +41,8 @@ func initPriorityQueue(pq *priority_queue.PriorityQueue, filesPool *log_files.Lo
 			// EOF
 			continue
 		}
-		pq.Push(PriorityQueueItem{fileName: fileName, line: line})
+		item := PriorityQueueItem{fileName: fileName, line: line}
+		heap.Push(pq, item)
 	}
 	heap.Init(pq)
 }
