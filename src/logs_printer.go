@@ -30,7 +30,7 @@ func (pq PriorityQueueItem) Lt(other interface{}) bool {
 	return ts < otherTs
 }
 
-func initHeap(pq *priority_queue.PriorityQueue, filesPool *log_files.LocalDiskFilePoolHandler) {
+func initPriorityQueue(pq *priority_queue.PriorityQueue, filesPool *log_files.LocalDiskFilePoolHandler) {
 
 	// init queue
 	for _, fileName := range filesPool.Files() {
@@ -51,7 +51,7 @@ func main() {
 	defer filesPool.CloseFiles()
 
 	pq := priority_queue.PriorityQueue{}
-	initHeap(&pq, filesPool)
+	initPriorityQueue(&pq, filesPool)
 
 	for pq.Len() > 0 {
 		minLineItem := pq.Pop().(PriorityQueueItem)
