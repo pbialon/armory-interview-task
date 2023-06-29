@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/delabania/armory-interview-task/src/files"
+	"github.com/delabania/armory-interview-task/src/log_files"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
@@ -14,7 +14,7 @@ type filePool interface {
 
 func main() {
 	dir := parseInputArgs(os.Args[1:])
-	filesPool := files.NewLocalDiskFilePoolHandler(dir)
+	filesPool := log_files.NewLocalDiskFilePoolHandler(dir)
 	defer filesPool.CloseFiles()
 }
 

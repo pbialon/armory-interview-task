@@ -1,4 +1,4 @@
-package files
+package log_files
 
 import (
 	"strings"

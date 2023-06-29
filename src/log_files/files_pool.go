@@ -1,4 +1,4 @@
-package files
+package log_files
 
 import (
 	"bufio"
@@ -23,9 +23,9 @@ func NewLocalDiskFilePoolHandler(dir string) *LocalDiskFilePoolHandler {
 	globPattern := filepath.Join(dir, fmt.Sprintf("*.%s", LogFileExtension))
 	filePaths, err := filepath.Glob(globPattern)
 	if err != nil {
-		log.Fatal("Couldn't find log files", err)
+		log.Fatal("Couldn't find log log_files", err)
 	}
-	log.Infof("Found log %v files", len(filePaths))
+	log.Infof("Found log %v log_files", len(filePaths))
 
 	for _, filePath := range filePaths {
 		fileHandle, err := os.Open(filePath)
@@ -62,7 +62,7 @@ func (fp *LocalDiskFilePoolHandler) CloseFiles() {
 			log.Fatal("Couldn't close file", err)
 		}
 	}
-	log.Infof("Closed %v files", len(fp.files))
+	log.Infof("Closed %v log_files", len(fp.files))
 
 	fp.files = nil
 }

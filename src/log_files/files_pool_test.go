@@ -1,4 +1,4 @@
-package files
+package log_files
 
 import (
 	"os"
@@ -41,7 +41,7 @@ func TestLocalDiskFilePoolHandler_NextLine(t *testing.T) {
 		wantErr []bool
 	}{
 		{
-			name: "should read lines from files",
+			name: "should read lines from log_files",
 			args: args{
 				fileNames: []string{"test1.log", "test2.log", "test1.log", "test1.log", "test2.log"},
 			},
