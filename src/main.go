@@ -1,7 +1,6 @@
 package main
 
 import (
-	"container/heap"
 	"github.com/delabania/armory-interview-task/src/log_files"
 	"github.com/delabania/armory-interview-task/src/priority_queue"
 	log "github.com/sirupsen/logrus"
@@ -20,17 +19,17 @@ func main() {
 
 	for pq.Len() > 0 {
 		minLineItem := pq.Pop().(PriorityQueueItem)
+		fileName := minLineItem.fileName
 
 		println(minLineItem.line.Raw())
 
-		line, _ := nextLineUntilValidOrEndOfFile(minLineItem.fileName, filesPool)
+		line := nextLineUntilIsValidOrEOF(fileName, filesPool)
 		if line == nil {
 			// EOF
 			continue
 		}
 
-		pq.Push(PriorityQueueItem{fileName: minLineItem.fileName, line: line})
-		heap.Fix(&pq, pq.Len()-1)
+		addNewLineAndFixHeap(&pq, line, fileName)
 	}
 }
 

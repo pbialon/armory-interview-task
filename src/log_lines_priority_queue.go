@@ -35,26 +35,24 @@ func (pq PriorityQueueItem) Lt(other interface{}) bool {
 }
 
 func initPriorityQueue(pq *priority_queue.PriorityQueue, filesPool *log_files.LocalDiskFilePoolHandler) {
-
-	// init queue
 	for _, fileName := range filesPool.Files() {
-		line, err := filesPool.NextLine(fileName)
-		if err != nil {
-			log.Fatal("Couldn't read line", err)
+		line := nextLineUntilIsValidOrEOF(fileName, filesPool)
+		if line == nil {
+			// EOF
+			continue
 		}
-		logLine := log_files.NewLogLineImpl(line)
-		pq.Push(PriorityQueueItem{fileName: fileName, line: logLine})
+		pq.Push(PriorityQueueItem{fileName: fileName, line: line})
 	}
 	heap.Init(pq)
 }
 
-func nextLineUntilValidOrEndOfFile(fileName string, filesPool *log_files.LocalDiskFilePoolHandler) (LogLine, error) {
+func nextLineUntilIsValidOrEOF(fileName string, filesPool *log_files.LocalDiskFilePoolHandler) LogLine {
 	for {
 		line, err := filesPool.NextLine(fileName)
 		if line == "" {
 			if err == nil {
 				// EOF
-				return nil, nil
+				return nil
 			} else {
 				// couldn't read line - try to read next one
 				continue
@@ -65,6 +63,12 @@ func nextLineUntilValidOrEndOfFile(fileName string, filesPool *log_files.LocalDi
 			// try to read next line
 			continue
 		}
-		return logLine, nil
+		return logLine
 	}
+}
+
+func addNewLineAndFixHeap(pq *priority_queue.PriorityQueue, line LogLine, fileName string) {
+	item := PriorityQueueItem{fileName: fileName, line: line}
+	pq.Push(item)
+	heap.Fix(pq, pq.Len()-1)
 }
