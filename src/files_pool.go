@@ -4,6 +4,7 @@ import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"os"
+	"path"
 	"path/filepath"
 )
 
@@ -15,17 +16,20 @@ type LocalDiskFilePoolHandler struct {
 
 func NewLocalDiskFilePoolHandler(dir string) *LocalDiskFilePoolHandler {
 	files := make(map[string]*os.File)
-	fileNames, err := filepath.Glob(filepath.Join(dir, fmt.Sprintf("*.%s", LogFileExtension)))
+
+	globPattern := filepath.Join(dir, fmt.Sprintf("*.%s", LogFileExtension))
+	filePaths, err := filepath.Glob(globPattern)
 	if err != nil {
 		log.Fatal("Couldn't find log files", err)
 	}
-	log.Infof("Found log %v files", len(fileNames))
+	log.Infof("Found log %v files", len(filePaths))
 
-	for _, fileName := range fileNames {
-		fileHandle, err := os.Open(fileName)
+	for _, filePath := range filePaths {
+		fileHandle, err := os.Open(filePath)
 		if err != nil {
 			log.Fatal("Couldn't open file", err)
 		}
+		fileName := path.Base(filePath)
 		files[fileName] = fileHandle
 	}
 	return &LocalDiskFilePoolHandler{files: files}
