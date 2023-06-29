@@ -30,7 +30,7 @@ func Test_logLineImpl_Timestamp(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := &logLineImpl{
+			l := &LogLineImpl{
 				line: tt.fields.line,
 			}
 			got, err := l.Timestamp()
