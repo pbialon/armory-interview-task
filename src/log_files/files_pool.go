@@ -3,6 +3,7 @@ package log_files
 import (
 	"bufio"
 	"fmt"
+	"github.com/samber/lo"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"path"
@@ -49,7 +50,7 @@ func (fp *LocalDiskFilePoolHandler) NextLine(fileName string) (string, error) {
 			// todo: is it really fatal?
 			log.Fatal("Couldn't read line", err)
 		}
-		return "", err
+		return "", nil
 	}
 	line = scanner.Text()
 	return line, nil
@@ -65,4 +66,8 @@ func (fp *LocalDiskFilePoolHandler) CloseFiles() {
 	log.Infof("Closed %v log_files", len(fp.files))
 
 	fp.files = nil
+}
+
+func (fp *LocalDiskFilePoolHandler) Files() []string {
+	return lo.Keys(fp.files)
 }

@@ -5,8 +5,6 @@ import (
 	"time"
 )
 
-const iso8601Layout = "2006-01-02T15:04:05Z"
-
 type LogLine interface {
 	Timestamp() (int64, error)
 	Raw() string
@@ -31,7 +29,7 @@ func (l *LogLineImpl) Raw() string {
 }
 
 func (l *LogLineImpl) parseDatetime(datetime string) (int64, error) {
-	dateTime, err := time.Parse(iso8601Layout, datetime)
+	dateTime, err := time.Parse(time.RFC3339, datetime)
 	if err != nil {
 		return 0, err
 	}

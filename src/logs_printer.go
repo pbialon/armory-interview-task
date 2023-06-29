@@ -1,16 +1,13 @@
 package main
 
 import (
+	"container/heap"
 	"github.com/delabania/armory-interview-task/src/log_files"
+	"github.com/delabania/armory-interview-task/src/priority_queue"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
 )
-
-/*
-type filePool interface {
-	NextLine(fileName string) (string, error)
-}*/
 
 type PriorityQueueItem struct {
 	fileName string
@@ -23,9 +20,28 @@ func (pq PriorityQueueItem) Lt(other interface{}) bool {
 	otherTs, otherErr := otherItem.line.Timestamp()
 	if err != nil || otherErr != nil {
 		// todo: is it really fatal?
-		log.Fatal("Couldn't parse timestamp")
+		if err != nil {
+			log.Fatal("Couldn't parse timestamp: ", err)
+		}
+		if otherErr != nil {
+			log.Fatal("Couldn't parse timestamp: ", otherErr)
+		}
 	}
 	return ts < otherTs
+}
+
+func initHeap(pq *priority_queue.PriorityQueue, filesPool *log_files.LocalDiskFilePoolHandler) {
+
+	// init queue
+	for _, fileName := range filesPool.Files() {
+		line, err := filesPool.NextLine(fileName)
+		if err != nil {
+			log.Fatal("Couldn't read line", err)
+		}
+		logLine := log_files.NewLogLineImpl(line)
+		pq.Push(PriorityQueueItem{fileName: fileName, line: logLine})
+	}
+	heap.Init(pq)
 }
 
 func main() {
@@ -34,6 +50,24 @@ func main() {
 	filesPool := log_files.NewLocalDiskFilePoolHandler(dir)
 	defer filesPool.CloseFiles()
 
+	pq := priority_queue.PriorityQueue{}
+	initHeap(&pq, filesPool)
+
+	for pq.Len() > 0 {
+		minLineItem := pq.Pop().(PriorityQueueItem)
+
+		println(minLineItem.line.Raw())
+
+		line, _ := filesPool.NextLine(minLineItem.fileName)
+		if line == "" {
+			continue
+		}
+
+		logLine := log_files.NewLogLineImpl(line)
+
+		pq.Push(PriorityQueueItem{fileName: minLineItem.fileName, line: logLine})
+		heap.Fix(&pq, pq.Len()-1)
+	}
 }
 
 func parseInputArgs(args []string) string {
