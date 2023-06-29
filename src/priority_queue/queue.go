@@ -1,7 +1,7 @@
 package priority_queue
 
 type Item interface {
-	lt(other interface{}) bool
+	Lt(other interface{}) bool
 }
 
 type PriorityQueue struct {
@@ -15,7 +15,7 @@ func (pq *PriorityQueue) Len() int {
 func (pq *PriorityQueue) Less(i, j int) bool {
 	first := pq.items[i]
 	second := pq.items[j]
-	return first.lt(second)
+	return first.Lt(second)
 }
 
 func (pq *PriorityQueue) Swap(i, j int) {

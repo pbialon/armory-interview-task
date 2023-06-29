@@ -8,8 +8,8 @@ import (
 const iso8601Layout = "2006-01-02T15:04:05Z"
 
 type LogLine interface {
-	timestamp() (int64, error)
-	raw() string
+	Timestamp() (int64, error)
+	Raw() string
 }
 
 type LogLineImpl struct {

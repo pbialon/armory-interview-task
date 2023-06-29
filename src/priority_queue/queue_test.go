@@ -10,7 +10,7 @@ type testStruct struct {
 	value    string
 }
 
-func (e testStruct) lt(other interface{}) bool {
+func (e testStruct) Lt(other interface{}) bool {
 	return e.priority < other.(*testStruct).priority
 }
 
