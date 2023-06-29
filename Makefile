@@ -1,4 +1,5 @@
 compile:
+	mkdir -p build
 	go build -o build/logs_printer ./src/
 
 run:
