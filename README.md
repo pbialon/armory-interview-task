@@ -15,9 +15,28 @@ The goal is to print the individual lines from the log files, sorted by timestam
 
 ## Solution
 
-The solution to the problem is implemented as a command-line tool called `logs_printer`. The tool reads log files from a specified directory, sorts the lines based on timestamps, and prints them to the screen.
+The solution to the problem is implemented as a command-line tool called `logs_printer`. 
+The tool reads log files from a specified directory, sorts the lines based on timestamps, and prints them to the screen.
 
-### Usage
+### Implementation Details
+
+The tool uses a priority queue to sort the lines from the log files.
+First, it reads the first lines from the set of given files and creates a priority queue. 
+A "priority" is the timestamp of a given log line. Lower timestamps have higher priority.
+Then, each time we pop a line from the priority queue, and we read the next line from the file that contained the popped line.
+We fix the heap, and we repeat the process until all lines from all files are read and printed.
+The solution works in _O(n * log(k) )_ time, where _n_ is the total number of lines in all files, and _k_ is the number of files.
+
+### Repository Structure
+The repository structure consists of the following components:
+
+- `src`: Contains the source code for the solution. It contains of two packages:
+  - `log_files`: Contains the code for reading and sorting the log files.
+  - `priority_queue`: Contains the code for the priority queue used for on-the-fly files sorting.
+- `resources`: Contains the log files used for testing the solution.
+
+
+## Usage
 
 To use the `logs_printer` tool, follow these steps:
 
@@ -32,13 +51,6 @@ make compile
 ```
 Replace `<path_to_logs>` with the path to the directory containing the log files. The tool assumes that all log files in the specified directory have the .log extension.
 
-### Repository Structure
-The repository structure consists of the following components:
-
-- `src`: Contains the source code for the solution. It contains of two packages:
-  - `log_files`: Contains the code for reading and sorting the log files.
-  - `priority_queue`: Contains the code for the priority queue used for on-the-fly files sorting.
-- `resources`: Contains the log files used for testing the solution.
 
 ### Makefile Commands
 
