@@ -31,7 +31,8 @@ func (pq *PriorityQueue) Pop() interface{} {
 		return nil
 	}
 	old := pq.items
-	item := old[0]
-	pq.items = old[1:]
+	n := len(old)
+	item := old[n-1]
+	pq.items = old[0 : n-1]
 	return item
 }
