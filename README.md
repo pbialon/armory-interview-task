@@ -31,14 +31,14 @@ The solution works in _O(n * log(k) )_ time, where _n_ is the total number of li
 
 During the implementation I made the following assumptions:
 1. Number of log files is less than the limit of the open file descriptors on the machine.  
-2. The combined length of any set of lines from the log files (1 line from each file) is less than 16,000,000,000  
+2. The combined length of any set of lines from the log files (1 line from each file) is less than 16,000,000,000 (it is feasible to store them in memory).
 3. All the logs files are located in a single directory on local disk, and they have the .log extension.
 4. If there is any error in parsing a log line, the line is ignored, and we log the error to the console.
 
 Apart from the first assumption, the other assumptions are not critical for the solution. 
 To handle a case when the number of log files is greater than the limit of the open file descriptors,
 we can modify the solution to read the batches of log files, and create an output file for each batch.
-We can do it until we are left with less files to process than the limit of the open file descriptors.
+We can do it until we are left with fewer files to process than the limit of the open file descriptors.
 
 I didn't implement this, as I didn't have enough time to do it, but it can be done if needed.
 
